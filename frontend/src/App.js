@@ -18,7 +18,7 @@ const App = () => {
         <Route path="/telemedicine" element={<TelemedicineSession />} />
       </Routes>
     </div>
-  );    `                                                                                                                                                                       ````````````````
+  ); 
 };
 
 export default App;
