@@ -1,8 +1,11 @@
-from app import db
+from backend.app import db
 
 class DifferentialDiagnosis(db.Model):
-    __tablename__ = 'differential_diagnosis'
-    
     id = db.Column(db.Integer, primary_key=True)
-    diagnosis = db.Column(db.String(100), nullable=False)
-    potential_conditions = db.Column(db.Text, nullable=False)
+    patient_id = db.Column(db.Integer, nullable=False)
+    possible_conditions = db.Column(db.String(500), nullable=False)
+    risk_factors = db.Column(db.String(500))
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    def __repr__(self):
+        return f'<DifferentialDiagnosis {self.id}>'

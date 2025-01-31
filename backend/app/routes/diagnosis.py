@@ -1,20 +1,20 @@
 from flask import Blueprint, request, jsonify
-from app.models.diagnosis_engine import DiagnosisEngine
-from app import db
+from backend.app.models.diagnosis_engine import Diagnosis
+from backend.app import db
 
-bp = Blueprint('diagnosis', __name__)
+diagnosis_bp = Blueprint('diagnosis', __name__)
 
-@bp.route('/diagnosis', methods=['POST'])
-def add_diagnosis():
+@diagnosis_bp.route('/diagnose', methods=['POST'])
+def diagnose():
     data = request.get_json()
-    new_diagnosis = DiagnosisEngine(**data)
-    db.session.add(new_diagnosis)
-    db.session.commit()
-    return jsonify({"message": "Diagnosis added successfully", "diagnosis": new_diagnosis.id}), 201
+    patient_id = data.get('patient_id')
+    condition = data.get('condition')
+    confidence_level = data.get('confidence_level')
 
-@bp.route('/diagnosis/<int:id>', methods=['GET'])
-def get_diagnosis(id):
-    diagnosis = DiagnosisEngine.query.get(id)
-    if diagnosis:
-        return jsonify({"diagnosis": diagnosis.diagnosis})
-    return jsonify({"message": "Diagnosis not found"}), 404
+    if patient_id and condition and confidence_level:
+        diagnosis = Diagnosis(patient_id=patient_id, condition=condition, confidence_level=confidence_level)
+        db.session.add(diagnosis)
+        db.session.commit()
+        return jsonify({'message': 'Diagnosis recorded successfully', 'diagnosis_id': diagnosis.id}), 201
+
+    return jsonify({'error': 'Invalid data'}), 400

@@ -1,4 +1,5 @@
 def detect_bias(data):
-    if 'gender' in data:
-        return "Potential bias detected"
-    return "No bias detected"
+    # Example: Check for bias in patient data
+    if 'gender' in data and data['gender'] not in ['male', 'female', 'other']:
+        return True
+    return False

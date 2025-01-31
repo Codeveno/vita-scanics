@@ -1,0 +1,21 @@
+/* ImageUpload Component */
+input[type="file"] {
+    margin: 10px 0;
+  }
+  
+  /* PatientForm Component */
+  form label {
+    display: block;
+    margin: 10px 0;
+  }
+  
+  form input, form select, form textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+  }
+  
+  /* Dashboard Component */
+  .dashboard {
+    padding: 20px;
+  }

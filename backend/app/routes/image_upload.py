@@ -1,16 +1,21 @@
 from flask import Blueprint, request, jsonify
-from app.models.image_processing import ImageProcessing
-from app import db
+from backend.app.models.image_processing import MedicalImage
+from backend.app import db
 
-bp = Blueprint('image_upload', __name__)
+image_upload_bp = Blueprint('image_upload', __name__)
 
-@bp.route('/upload_image', methods=['POST'])
+@image_upload_bp.route('/upload', methods=['POST'])
 def upload_image():
-    image = request.files.get('image')
-    if image:
-        image_url = "path/to/save/image"
-        new_image = ImageProcessing(image_url=image_url)
-        db.session.add(new_image)
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file uploaded'}), 400
+
+    file = request.files['file']
+    patient_id = request.form.get('patient_id')
+
+    if file and patient_id:
+        image = MedicalImage(patient_id=patient_id, image_path=file.filename)
+        db.session.add(image)
         db.session.commit()
-        return jsonify({"message": "Image uploaded successfully", "image_url": image_url}), 201
-    return jsonify({"message": "No image provided"}), 400
+        return jsonify({'message': 'Image uploaded successfully', 'image_id': image.id}), 201
+
+    return jsonify({'error': 'Invalid file or patient ID'}), 400

@@ -1,10 +1,11 @@
-from app import db
+from backend.app import db
 
-class DiagnosisEngine(db.Model):
-    __tablename__ = 'diagnosis_engine'
-    
+class Diagnosis(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    patient_id = db.Column(db.Integer, db.ForeignKey('patients.id'), nullable=False)
-    engine_output = db.Column(db.String(255), nullable=False)
-    
-    patient = db.relationship('Patient', backref=db.backref('diagnosis_engine', lazy=True))
+    patient_id = db.Column(db.Integer, nullable=False)
+    condition = db.Column(db.String(200), nullable=False)
+    confidence_level = db.Column(db.Float, nullable=False)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    def __repr__(self):
+        return f'<Diagnosis {self.id}>'

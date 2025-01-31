@@ -1,10 +1,11 @@
-from app import db
+from backend.app import db
 
 class MentalHealthAnalysis(db.Model):
-    __tablename__ = 'mental_health_analysis'
-    
     id = db.Column(db.Integer, primary_key=True)
-    patient_id = db.Column(db.Integer, db.ForeignKey('patients.id'), nullable=False)
-    mental_health_condition = db.Column(db.String(100), nullable=False)
-    
-    patient = db.relationship('Patient', backref=db.backref('mental_health_analysis', lazy=True))
+    patient_id = db.Column(db.Integer, nullable=False)
+    behavioral_patterns = db.Column(db.String(500), nullable=False)
+    mental_condition = db.Column(db.String(200))
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    def __repr__(self):
+        return f'<MentalHealthAnalysis {self.id}>'

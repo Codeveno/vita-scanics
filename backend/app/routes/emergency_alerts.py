@@ -1,7 +1,19 @@
-from fastapi import APIRouter
+from flask import Blueprint, request, jsonify
+from backend.app.models.emergency_alerts import EmergencyAlert
+from backend.app import db
 
-router = APIRouter()
+emergency_alerts_bp = Blueprint('emergency_alerts', __name__)
 
-@router.post("/send")
-async def send_emergency_alert(patient_id: int):
-    return {"message": f"Emergency alert sent for patient {patient_id}"}
+@emergency_alerts_bp.route('/trigger', methods=['POST'])
+def trigger_alert():
+    data = request.get_json()
+    patient_id = data.get('patient_id')
+    alert_message = data.get('alert_message')
+
+    if patient_id and alert_message:
+        alert = EmergencyAlert(patient_id=patient_id, alert_message=alert_message)
+        db.session.add(alert)
+        db.session.commit()
+        return jsonify({'message': 'Emergency alert triggered', 'alert_id': alert.id}), 201
+
+    return jsonify({'error': 'Invalid data'}), 400

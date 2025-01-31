@@ -1,20 +1,26 @@
 from flask import Blueprint, request, jsonify
-from app.models.recommendation_engine import RecommendationEngine
-from app import db
+from backend.app.models.recommendation_engine import Recommendation
+from backend.app import db
 
-bp = Blueprint('recommendations', __name__)
+recommendations_bp = Blueprint('recommendations', __name__)
 
-@bp.route('/recommendations', methods=['POST'])
+@recommendations_bp.route('/add', methods=['POST'])
 def add_recommendation():
     data = request.get_json()
-    new_recommendation = RecommendationEngine(**data)
-    db.session.add(new_recommendation)
-    db.session.commit()
-    return jsonify({"message": "Recommendation added successfully", "recommendation": new_recommendation.id}), 201
+    patient_id = data.get('patient_id')
+    treatment_plan = data.get('treatment_plan')
+    medication = data.get('medication')
+    warnings = data.get('warnings')
 
-@bp.route('/recommendations/<int:id>', methods=['GET'])
-def get_recommendation(id):
-    recommendation = RecommendationEngine.query.get(id)
-    if recommendation:
-        return jsonify({"recommendation": recommendation.recommendation})
-    return jsonify({"message": "Recommendation not found"}), 404
+    if patient_id and treatment_plan:
+        recommendation = Recommendation(
+            patient_id=patient_id,
+            treatment_plan=treatment_plan,
+            medication=medication,
+            warnings=warnings
+        )
+        db.session.add(recommendation)
+        db.session.commit()
+        return jsonify({'message': 'Recommendation added successfully', 'recommendation_id': recommendation.id}), 201
+
+    return jsonify({'error': 'Invalid data'}), 400

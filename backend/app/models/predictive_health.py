@@ -1,10 +1,11 @@
-from app import db
+from backend.app import db
 
 class PredictiveHealth(db.Model):
-    __tablename__ = 'predictive_health'
-    
     id = db.Column(db.Integer, primary_key=True)
-    patient_id = db.Column(db.Integer, db.ForeignKey('patients.id'), nullable=False)
-    health_risk = db.Column(db.String(100), nullable=False)
-    
-    patient = db.relationship('Patient', backref=db.backref('predictive_health', lazy=True))
+    patient_id = db.Column(db.Integer, nullable=False)
+    predicted_condition = db.Column(db.String(200), nullable=False)
+    risk_score = db.Column(db.Float, nullable=False)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    def __repr__(self):
+        return f'<PredictiveHealth {self.id}>'
