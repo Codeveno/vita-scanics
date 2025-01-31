@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './styles/components.css';
 
 const ImageUpload = () => {
   const [file, setFile] = useState(null);
@@ -11,13 +12,13 @@ const ImageUpload = () => {
     if (file) {
       const formData = new FormData();
       formData.append('file', file);
-      // Send formData to the backend
       console.log('Uploading file:', file.name);
     }
   };
 
   return (
-    <div>
+    <div className="image-upload">
+      <h2>Upload Medical Image</h2>
       <input type="file" onChange={handleFileChange} />
       <button onClick={handleUpload}>Upload</button>
     </div>
